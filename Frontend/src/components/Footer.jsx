@@ -6,7 +6,7 @@ function footer() {
       <h2 className="text-center text-[70px] underline irish-grover text-[#E53015] bg-[#FCECC7]/90">
         Customer Support
       </h2>
-      <div className="flex items-center justify-around mt-10 text-3xl bg-[#FCECC7]/90">
+      <div className="flex items-center justify-around mt-10 text-3xl bg-[#FCECC7]/90 py-2">
         <ul className="flex flex-col gap-10 text-left inter-custom list-disc text-[#E53015]">
           <li>FAQ</li>
           <li>Terms and Conditions</li>
