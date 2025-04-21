@@ -4,8 +4,10 @@ import { useAdminStore } from "../useStores/useAdminStore";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { MdDashboard, MdDeliveryDining } from "react-icons/md";
 import { MdBusinessCenter } from "react-icons/md";
+import { MdAdminPanelSettings } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
 function Sidebar() {
+  const { authAdmin } = useAdminStore();
   const [toggle, setToggle] = useState(true);
   const { setActiveTab, activeTab } = useAdminStore();
   const navItems = [
@@ -25,7 +27,6 @@ function Sidebar() {
       label: "Restaurant Overview",
       icon: <MdBusinessCenter className="size-6 text-[#FCECC7]" />,
     },
-    
   ];
 
   return (
@@ -49,6 +50,25 @@ function Sidebar() {
       </header>
       <nav>
         <ul className="space-y-4">
+          {authAdmin.adminRole === "SuperAdmin" && (
+            <li
+              className={`cursor-pointer flex items-center gap-4 px-4 py-2 rounded-lg ${
+                activeTab === "Admin Overview" ? "bg-[#0f3f8d]" : ""
+              }`}
+              onClick={() => setActiveTab("Admin Overview")}
+            >
+              <MdAdminPanelSettings className="size-6 text-[#FCECC7]" />
+              <span
+                className={`transition-all duration-200 whitespace-nowrap ${
+                  toggle
+                    ? "opacity-100 visible ml-2"
+                    : "opacity-0 invisible ml-0"
+                }`}
+              >
+                Admin Overview
+              </span>
+            </li>
+          )}
           {navItems.map((item, index) => (
             <li
               key={index}

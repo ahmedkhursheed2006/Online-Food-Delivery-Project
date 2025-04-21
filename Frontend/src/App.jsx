@@ -1,5 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router";
-import { Navigate } from "react-router";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import CustomerLayout from "./components/CustomerLayout";
@@ -9,32 +8,86 @@ import Cart from "./pages/Cart";
 import RestaurantUI from "./pages/RestaurantUI";
 import AdminLayout from "./components/AdminLayout";
 import AdminUI from "./pages/AdminUI";
-import Orders from "./restaurantComponents/Orders";
-import Analytics from "./restaurantComponents/Analytics";
-import Products from "./restaurantComponents/Products";
 import RestaurantLayout from "./components/RestaurantLayout";
+import ProfilePage from "./pages/ProfilePage";
+import { Toaster } from "react-hot-toast";
+import { useCustomerStore } from "./useStores/useCustomerStore";
+import { useRestaurantStore } from "./useStores/useRestaurantStore";
+import { useAdminStore } from "./useStores/useAdminStore";
+import { useEffect } from "react";
+import RestaurantLoginPage from "./restaurantComponents/RestaurantLoginPage";
+import AdminLogin from "./adminComponents/AdminLogin";
 function App() {
+  const { checkRestaurantAuth, authRestaurant } = useRestaurantStore();
+  const { checkAuth, authCustomer } = useCustomerStore();
+  const { authAdmin } = useAdminStore();
+  useEffect(() => {
+    checkRestaurantAuth();
+  }, [checkRestaurantAuth]);
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
   return (
     <>
+      <Toaster />
       <Router>
         <Routes>
-          <Route path="/restaurant-dashboard" element={<RestaurantLayout />}>
-            <Route index element={<RestaurantUI />} />
-            <Route path="orders" element={<Orders />} />
-            <Route path="analytics" element={<Analytics />} />
-            <Route path="products" element={<Products />} />
+          <Route path="/" element={<CustomerLayout />}>
+            <Route
+              index
+              element={authCustomer ? <HomePage /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/login"
+              element={!authCustomer ? <LoginPage /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/signup"
+              element={!authCustomer ? <SignupPage /> : <Navigate to="/" />}
+            />
+            <Route path="/profile/:id" element={<ProfilePage />} />
+
+            <Route path="cart" element={<Cart />} />
           </Route>
 
-          <Route path="/admin-dashboard" element={<AdminLayout />}>
-            <Route index element={<AdminUI />} />
+          <Route path="/restaurant" element={<RestaurantLayout />}>
+            <Route
+              path="signup"
+              element={
+                !authRestaurant ? (
+                  <CreateKitchenPage />
+                ) : (
+                  <Navigate to="/restaurant" />
+                )
+              }
+            />
+            <Route
+              path="login"
+              element={
+                !authRestaurant ? (
+                  <RestaurantLoginPage />
+                ) : (
+                  <Navigate to="/restaurant" />
+                )
+              }
+            />
+            <Route
+              index
+              element={
+                authRestaurant ? <RestaurantUI /> : <Navigate to="/login" />
+              }
+            />
           </Route>
-          
-          <Route path="/" element={<CustomerLayout />}>
-            <Route index element={<HomePage />} />
-            <Route path="login" element={<LoginPage />} />
-            <Route path="register" element={<SignupPage />} />
-            <Route path="create-kitcken" element={<CreateKitchenPage />} />
-            <Route path="cart" element={<Cart />} />
+
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route
+              index
+              element={authAdmin ? <AdminUI /> : <Navigate to="login" />}
+            />
+            <Route
+              path="login"
+              element={!authAdmin ? <AdminLogin /> : <Navigate to="/admin" />}
+            />
           </Route>
         </Routes>
       </Router>

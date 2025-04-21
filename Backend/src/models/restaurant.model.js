@@ -1,43 +1,98 @@
 import mongoose from "mongoose";
 
 const restaurantSchema = new mongoose.Schema({
-  name: {
+  // 🏪 Restaurant Details
+  restaurantName: {
     type: String,
     required: true,
   },
-  email: {
+  restaurantAddress: {
+    type: String,
+    required: true,
+  },
+  restaurantPhoneNumber: {
+    type: String,
+    required: true,
+  },
+  restaurantEmail: {
     type: String,
     required: true,
     unique: true,
   },
-  password: {
+  businessType: {
+    type: String,
+    enum: ["restaurant", "cloudKitchen", "takeOut"],
+    required: true,
+  },
+  cuisineType: {
+    type: String,
+    required: true,
+  },
+  kitchenImage: {
+    type: String, // File path or URL
+  },
+
+  // 👤 Owner / Manager
+  ownerName: {
+    type: String,
+    required: true,
+  },
+  ownerContactNumber: {
+    type: String,
+    required: true,
+  },
+  ownerContactEmail: {
+    type: String,
+    required: true,
+  },
+  governmentID: {
+    type: String,
+    required: true,
+  },
+
+  // 🏦 Bank Details
+  bankName: {
+    type: String,
+    required: true,
+  },
+  accountNumber: {
+    type: String,
+    required: true,
+  },
+  accountTitle: {
+    type: String,
+    required: true,
+  },
+  ibanNumber: {
+    type: String,
+    required: true,
+  },
+  paymentCycle: {
+    type: String,
+    enum: ["weekly", "biweekly", "monthly"],
+    required: true,
+  },
+
+  // 🔒 Access Info
+  restaurantPassword: {
     type: String,
     required: true,
     minlength: 6,
   },
-  phone: {
-    type: String,
-    required: true,
-    length: 11,
-  },
+
+  // 📦 Menu (empty by default, can be filled later)
   menu: {
     type: Array,
-    required: true,
-    minlength: 1,
+    default: [],
   },
-  address: {
-    type: String,
-    required: true,
-  },
-  city: {
-    type: String,
-    required: true,
-  },
+
+  // 🛡️ Status Tracking
   status: {
     type: String,
     enum: ["active", "inactive", "warned", "disabled", "banned"],
     default: "active",
   },
+
   createdAt: {
     type: Date,
     default: Date.now,
@@ -51,5 +106,6 @@ const restaurantSchema = new mongoose.Schema({
     default: null,
   },
 });
+
 const Restaurant = mongoose.model("Restaurant", restaurantSchema);
 export default Restaurant;

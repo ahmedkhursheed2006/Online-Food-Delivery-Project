@@ -2,18 +2,54 @@ import React, { useState } from "react";
 import { Link } from "react-router";
 import { useGoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-
+import { useCustomerStore } from "../useStores/useCustomerStore";
 export default function LoginPage() {
-    const login = useGoogleLogin({
-        onSuccess: (tokenResponse) => {
-            console.log("Token response:", tokenResponse);
-          const tokenResponseDecoded = jwtDecode(tokenResponse.access_token);
-          console.log(tokenResponseDecoded); 
-        },
-        onError: () => {
-          console.log('Login Failed');
-        }
-      });
+  const { login, isLoggingIn, googleLoginSuccess, googleLoginFailure } =
+    useCustomerStore();
+
+  const Googlelogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      console.log("Token response:", tokenResponse);
+
+      try {
+        const res = await fetch(
+          "https://www.googleapis.com/oauth2/v3/userinfo",
+          {
+            headers: {
+              Authorization: `Bearer ${tokenResponse.access_token}`,
+            },
+          }
+        );
+
+        const userInfo = await res.json();
+        console.log(userInfo);
+        const {name, email} = userInfo;
+        console.log(name, email);
+        
+        
+        googleLoginSuccess({name, email});
+      } catch (error) {
+        console.log("Error fetching user info:", error);
+      }
+    },
+    onError: () => {
+      googleLoginFailure();
+    },
+  });
+
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const validateForm = () => {
+    if (!formData.email.trim()) return toast.error("Email is Required!");
+    if (!formData.password) return toast.error("Password is Required!");
+    return true;
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const success = validateForm();
+
+    if (success === true) login(formData);
+  };
   return (
     <div className="flex items-end justify-center h-screen w-full bg-[url(/Login-bg.jpg)] bg-cover bg-center bg-no-repeat">
       <div className="flex items-center justify-center h-9/10 w-9/10 bg-[url(/Login-bg.jpg)] bg-cover bg-center bg-no-repeat shadow-[0_0_100px_70px_rgba(0,0,0,0.1)] shadow-black">
@@ -24,24 +60,32 @@ export default function LoginPage() {
           <h3 className="text-white text-5xl font-bold text-shadow-xs text-shadow-white">
             Login
           </h3>
-          <form className="flex flex-col gap-10 w-full">
+          <form className="flex flex-col gap-10 w-full" onSubmit={handleSubmit}>
             <input
               type="email"
               name="email"
               placeholder="Email"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
               className="text-[#444] bg-white/95 p-2 text-base outline-0 shadow-white shadow-[0_0_2px_1px_rgba(0,0,0,0.1)]"
             />
             <input
               type="password"
               name="password"
               placeholder="Password"
+              value={formData.password}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
               className="text-[#444] bg-white/95 p-2 text-base outline-0 shadow-white shadow-[0_0_2px_1px_rgba(0,0,0,0.1)]"
             />
             <button
               type="submit"
-              className="text-white bg-black/95 text-lg p-2 font-bold"
+              className="text-white bg-black/95 text-lg p-2 font-bold cursor-pointer"
             >
-              Login
+              {isLoggingIn ? "Logging in..." : "Login"}
             </button>
           </form>
           <p className="flex flex-col justify-center items-center text-white underline gap-1">
@@ -54,7 +98,7 @@ export default function LoginPage() {
               height="100"
               viewBox="0 0 48 48"
               className="size-10 bg-white rounded-full p-1"
-              onClick={() => login()}
+              onClick={() => Googlelogin()}
             >
               <path
                 fill="#fbc02d"
@@ -77,7 +121,7 @@ export default function LoginPage() {
           <p className="text-white text-base font-bold">
             Don't have an account?{" "}
             <Link
-              to="/register"
+              to="/signup"
               className="text-[#E53015] border-b-[#FCECC7] hover:border-b-[#E53015] border-b-2 hover:text-[#FCECC7] text-lg text-shadow-2xs text-shadow-[#FCECC7]"
             >
               Register
