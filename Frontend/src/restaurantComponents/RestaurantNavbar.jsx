@@ -5,17 +5,6 @@ import { useRestaurantStore } from "../useStores/useRestaurantStore";
 function RestaurantNavbar() {
   const { setActiveTab, authRestaurant, logout } = useRestaurantStore();
   const [profileOpen, setProfileOpen] = useState(false);
-  const cardRef = useRef(null);
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (cardRef.current && !cardRef.current.contains(e.target)) {
-        setProfileOpen(!profileOpen);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   return (
     <header>
@@ -65,10 +54,7 @@ function RestaurantNavbar() {
           <p className="text-sm font-semibold py-3 text-center">
             {authRestaurant.restaurantEmail}
           </p>
-          <section
-            className="flex flex-col items-center justify-center"
-            ref={cardRef}
-          >
+          <section className="flex flex-col items-center justify-center">
             <img
               src="https://cdn.iconscout.com/icon/free/png-256/free-avatar-icon-download-in-svg-png-gif-file-formats--user-boy-avatars-flat-icons-pack-people-456322.png"
               alt="Default Avatar"

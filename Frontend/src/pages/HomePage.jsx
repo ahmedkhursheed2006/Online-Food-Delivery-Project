@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import DeliveryMenu from "../components/DeliveryMenu";
 import Footer from "../components/Footer";
+import { useCustomerStore } from "../useStores/useCustomerStore";
 function HomePage() {
+  const { scrollSection, setScrollSection } = useCustomerStore();
+  useEffect(() => {
+    if (scrollSection === "menuSection") {
+      document.getElementById("menuSection").scrollIntoView({behavior: "smooth"})
+      setScrollSection(null);
+    }
+  }, [scrollSection]);
   return (
     <div className="bg-[url(/HomePage-Background.jpg)] bg-cover bg-center h-full w-full">
       <main className="flex flex-col">
@@ -17,11 +25,11 @@ function HomePage() {
             </h3>
           </div>
         </section>
-        <section className="">
+        <section id="menuSection" className="">
           <DeliveryMenu />
         </section>
       </main>
-      <Footer/>
+      <Footer />
     </div>
   );
 }

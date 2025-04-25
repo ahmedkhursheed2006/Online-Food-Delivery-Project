@@ -1,5 +1,7 @@
 import { generateToken } from "../lib/utils.js";
 import Admin from "../models/admin.model.js";
+import Customer from "../models/customer.model.js";
+import Restaurant from "../models/restaurant.model.js";
 import bcrypt from "bcryptjs";
 
 export const signup = async (req, res) => {
@@ -74,5 +76,37 @@ export const logout = (req, res) => {
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getAllCustomers = async (req, res) => {
+  try {
+    const customers = await Customer.find().sort({ createdAt: -1 });
+    res.status(201).json(customers);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const getAllRestaurants = async (req, res) => {
+  try {
+    const restaurants = await Restaurant.find().sort({ createdAt: -1 });
+    res.status(201).json(restaurants);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const getAllAdmins = async (req, res) => {
+  try {
+    const admins = await Admin.find({ adminRole: "Admin" }).sort({
+      createdAt: -1,
+    });
+    res.status(201).json(admins);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };

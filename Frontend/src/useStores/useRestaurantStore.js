@@ -8,6 +8,7 @@ export const useRestaurantStore = create((set) => ({
   isCheckingAuth: true,
   activeTab: "Dashboard",
   activeComponent: "Login",
+  products: [],
 
   setActiveTab: (tab) => set({ activeTab: tab }),
   setActiveComponent: (tab) => set({ activeComponent: tab }),
@@ -56,5 +57,35 @@ export const useRestaurantStore = create((set) => ({
     await axiosInstance.post("/restaurant/logout");
     set({ authRestaurant: null });
     toast.success("Logged Out Successfully");
+  },
+
+  addProduct: async (formData) => {
+    try {
+      const res = await axiosInstance.post("/product/addProduct", formData);
+      toast.success("Product Added");
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  },
+
+  getProduct: async () => {
+    try {
+      const res = await axiosInstance.get("/product/menu");
+      set({ products: [...res.data] });
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  },
+
+  deleteProduct: async (id) => {
+    try {
+      const res = await axiosInstance.delete(`/product/delete/${id}`);
+      toast.success("Product Deleted Successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
   },
 }));

@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { userData } from "../dummyData/userData";
-
+import { useAdminStore } from "../useStores/useAdminStore";
 function UserOverview() {
+  const { fetchedData, getAllCustomers } = useAdminStore();
   const [searchType, setSearchType] = useState("name");
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredUsers, setFilteredUsers] = useState(userData.customers);
+  useEffect(() => {
+    getAllCustomers();
+  }, []);
+  console.log(fetchedData);
+  const [filteredUsers, setFilteredUsers] = useState(fetchedData);
+  useEffect(() => {
+    console.log("Fetched Data:", fetchedData);
+    setFilteredUsers(fetchedData); // update whenever fetchedData updates
+  }, [fetchedData]);
 
   useEffect(() => {
     if (searchTerm === "") {
-      setFilteredUsers(userData.customers);
+      setFilteredUsers(fetchedData);
     } else {
-      const results = userData.customers.filter((user) => {
+      const results = fetchedData.filter((user) => {
         const value = user[searchType];
         return value
           ?.toString()
@@ -58,11 +66,11 @@ function UserOverview() {
           </thead>
           <tbody>
             {filteredUsers.length > 0 ? (
-              filteredUsers.map((user) => (
-                <tr key={user.id}>
-                  <td className="border px-4 py-2">{user.id}</td>
-                  <td className="border px-4 py-2">{user.name}</td>
-                  <td className="border px-4 py-2">{user.email}</td>
+              filteredUsers.map((customer) => (
+                <tr key={customer.id}>
+                  <td className="border px-4 py-2">{customer._id}</td>
+                  <td className="border px-4 py-2">{customer.name}</td>
+                  <td className="border px-4 py-2">{customer.email}</td>
                 </tr>
               ))
             ) : (

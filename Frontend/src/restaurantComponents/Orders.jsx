@@ -6,10 +6,34 @@ function Orders() {
 
   return (
     <div>
-      <h2 className="
-      text-center text-[#E5C815] font-bold text-4xl border-b-2 border-[#E5C815]">
+      <h2
+        className="
+      text-center text-[#E5C815] font-bold text-4xl border-b-2 border-[#E5C815]"
+      >
         Your Orders 🧾
       </h2>
+
+      <div className="flex items-center justify-center gap-3">
+        <label className=" flex items-center justify-center gap-1">
+          <input
+            type="radio"
+            name="status"
+            value="pending"
+            placeholder="pending"
+          />
+          pending
+        </label>
+        <label className=" flex items-center justify-center gap-1">
+          <input
+            type="radio"
+            name="status"
+            value="in progress"
+            placeholder="in progress"
+          />
+          in progress
+        </label>
+      </div>
+
       <article
         className="w-[150px] h-[250px] border-dotted border-4 border-[#d7d7d7] rounded-xl text-[#d7d7d7] text-[60px] flex justify-center items-center
       hover:border-[#b1b1b1] hover:text-[#b1b1b1] hover:cursor-pointer transition-all duration-300 ease-in-out m-5 hover:scale-105

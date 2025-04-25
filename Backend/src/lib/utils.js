@@ -12,7 +12,7 @@ export const generateToken = (EntityID, res) => {
   });
 
   return token;
-}; 
+};
 
 export const restaurantValidationSchema = Joi.object({
   // 🏪 Restaurant Details
@@ -23,6 +23,7 @@ export const restaurantValidationSchema = Joi.object({
     .required(),
   restaurantEmail: Joi.string().email().required(),
   restaurantPassword: Joi.string().min(6).required(),
+  restaurantCity: Joi.string(),
   businessType: Joi.string()
     .valid("restaurant", "cloudKitchen", "takeOut")
     .required(),
@@ -43,4 +44,12 @@ export const restaurantValidationSchema = Joi.object({
   accountTitle: Joi.string().required(),
   ibanNumber: Joi.string().required(),
   paymentCycle: Joi.string().valid("weekly", "biweekly", "monthly").required(),
+});
+
+export const productValidationSchema = Joi.object({
+  name: Joi.string().required(),
+  category: Joi.string().required(),
+  price: Joi.string().required(),
+  ingredients: Joi.string().required(),
+  restaurantId: Joi.string().required(),
 });

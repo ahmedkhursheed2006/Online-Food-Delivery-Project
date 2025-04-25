@@ -9,7 +9,6 @@ import RestaurantUI from "./pages/RestaurantUI";
 import AdminLayout from "./components/AdminLayout";
 import AdminUI from "./pages/AdminUI";
 import RestaurantLayout from "./components/RestaurantLayout";
-import ProfilePage from "./pages/ProfilePage";
 import { Toaster } from "react-hot-toast";
 import { useCustomerStore } from "./useStores/useCustomerStore";
 import { useRestaurantStore } from "./useStores/useRestaurantStore";
@@ -17,6 +16,7 @@ import { useAdminStore } from "./useStores/useAdminStore";
 import { useEffect } from "react";
 import RestaurantLoginPage from "./restaurantComponents/RestaurantLoginPage";
 import AdminLogin from "./adminComponents/AdminLogin";
+import FAQs from "./components/FAQs";
 function App() {
   const { checkRestaurantAuth, authRestaurant } = useRestaurantStore();
   const { checkAuth, authCustomer } = useCustomerStore();
@@ -45,7 +45,7 @@ function App() {
               path="/signup"
               element={!authCustomer ? <SignupPage /> : <Navigate to="/" />}
             />
-            <Route path="/profile/:id" element={<ProfilePage />} />
+            <Route path="/FAQs" element={<FAQs />} />
 
             <Route path="cart" element={<Cart />} />
           </Route>

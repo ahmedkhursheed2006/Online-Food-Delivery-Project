@@ -37,7 +37,7 @@ function SignupPage() {
           <h3 className="text-white text-5xl font-bold text-shadow-xs text-shadow-white">
             Register
           </h3>
-          <form className="flex flex-col gap-10 w-full" onSubmit={handleSubmit}>
+          <form className="flex flex-col gap-10 w-[90%]" onSubmit={handleSubmit}>
             <input
               type="text"
               name="name"

@@ -7,6 +7,8 @@ export const useAdminStore = create((set) => ({
   isCheckingAuth: false,
   activeTab: "Dashboard",
   isLoggingIn: false,
+  fetchingData: false,
+  fetchedData: [],
   setActiveTab: (tab) => set({ activeTab: tab }),
 
   signup: async (data) => {
@@ -19,9 +21,8 @@ export const useAdminStore = create((set) => ({
     }
   },
 
-  
   login: async (data) => {
-    set({ isLoggingin: true });
+    set({ isLoggingIn: true });
     try {
       const res = await axiosInstance.post("/admin/login", data);
       set({ authAdmin: res.data });
@@ -30,7 +31,7 @@ export const useAdminStore = create((set) => ({
       console.log(error);
       toast.error(error.response.data.message);
     } finally {
-      set({isLoggingin: false})
+      set({ isLoggingIn: false });
     }
   },
 
@@ -42,6 +43,44 @@ export const useAdminStore = create((set) => ({
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
+    }
+  },
+
+  getAllCustomers: async () => {
+    set({ fetchingData: true });
+    try {
+      const res = await axiosInstance.get("/admin/allCustomers");
+      set({ fetchedData: res.data });
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    } finally {
+      set({ fetchingData: false });
+    }
+  },
+
+  getAllRestaurants: async () => {
+    set({ fetchingData: true });
+    try {
+      const res = await axiosInstance.get("/admin/allRestaurants");
+      set({ fetchedData: res.data });
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    } finally {
+      set({ fetchingData: false });
+    }
+  },
+  getAllAdmins: async () => {
+    set({ fetchingData: true });
+    try {
+      const res = await axiosInstance.get("/admin/allAdmins");      
+      set({ fetchedData: res.data });
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    } finally {
+      set({ fetchingData: false });
     }
   },
 }));

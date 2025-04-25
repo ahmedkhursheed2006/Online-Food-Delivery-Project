@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import Customer from "../models/customer.model.js";
 import Restaurant from "../models/restaurant.model.js";
+import Admin from "../models/admin.model.js";
 
 export const protectRoute = async (req, res, next) => {
   try {
@@ -26,7 +27,11 @@ export const protectRoute = async (req, res, next) => {
     }
 
     if (!entity) {
-      return res.status(404).json({ message: "User not found" });
+      entity = await Admin.findById(decoded.id).select("-password");
+    }
+
+    if (!entity) {
+      return res.status(404).json({ message: "Entity not found" });
     }
 
     req.entity = entity;

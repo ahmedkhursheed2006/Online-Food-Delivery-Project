@@ -3,23 +3,16 @@ import { MdDeliveryDining } from "react-icons/md";
 import { NavLink, Link } from "react-router";
 import { useCustomerStore } from "../useStores/useCustomerStore";
 import { useRestaurantStore } from "../useStores/useRestaurantStore";
+
 function Navbar() {
   const [profileOpen, setProfileOpen] = useState(false);
 
-  const { authCustomer, logout } = useCustomerStore();
+  const { authCustomer, logout, setScrollSection } = useCustomerStore();
   const { setActiveComponent } = useRestaurantStore();
+  
+    
+ 
 
-  const cardRef = useRef(null);
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (cardRef.current && !cardRef.current.contains(e.target)) {
-        setProfileOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
   return (
     <header>
       {!authCustomer ? (
@@ -49,7 +42,7 @@ function Navbar() {
         </Link>
         <div className="flex items-center justify-center gap-4  ">
           <NavLink
-            to={"/order"}
+            onClick={()=> setScrollSection("menuSection")}
             className="bg-[#66B39A] rounded-md text-lg p-2 inter-custom"
           >
             Order Now
@@ -83,7 +76,7 @@ function Navbar() {
           </p>
           <section
             className="flex flex-col items-center justify-center"
-            ref={cardRef}
+            
           >
             <img
               src="https://cdn.iconscout.com/icon/free/png-256/free-avatar-icon-download-in-svg-png-gif-file-formats--user-boy-avatars-flat-icons-pack-people-456322.png"
@@ -91,18 +84,10 @@ function Navbar() {
               className="size-30"
             />
             <h4 className="text-3xl font-medium">Hi, {authCustomer.name}!</h4>
-            <Link
-              to={`/profile/${authCustomer._id}`}
-              className="text-center text-lg mt-10 p-1 border-2 rounded-full hover:bg-blue-200"
-            >
-              Manage Your Account
-            </Link>
             <div className="flex items-center justify-around  mt-5 gap-0.5">
-              <button className="bg-gray-400 text-[#f4f5f7] rounded-l-full text-xl py-4 px-2 text-center hover:cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out">
-                ➕ Add Details
-              </button>
+              
               <button
-                className="bg-gray-400 text-[#f4f5f7] rounded-r-full text-xl py-4 px-2 text-center hover:cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out"
+                className="bg-gray-400 text-[#f4f5f7] rounded-full text-xl py-4 px-2 text-center hover:cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out"
                 onClick={() => logout()}
               >
                 🚪 Log out{" "}

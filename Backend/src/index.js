@@ -8,6 +8,8 @@ import cookieParser from "cookie-parser";
 import customerRoutes from "./routes/customer.routes.js";
 import restaurantRoutes from "./routes/restaurant.routes.js";
 import adminRoutes from "./routes/admin.routes.js"
+import complaintRoutes from "./routes/complaint.routes.js"
+import productRoutes from "./routes/product.route.js"
 
 const app = express();
 
@@ -27,6 +29,8 @@ app.use(
 app.use("/api/customer", customerRoutes);
 app.use("/api/restaurant", restaurantRoutes);
 app.use("/api/admin", adminRoutes)
+app.use("/api/complaint", complaintRoutes)
+app.use("/api/product", productRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

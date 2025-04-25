@@ -36,7 +36,7 @@ const orderSchema = new mongoose.Schema({
     },
     paymentMethod: {
         type: String,
-        enum: ["creditCard", "debitCard", "CoD"], //COD = Cash on Delivery
+        enum: ["creditCard", "debitCard", "CoD"], //CoD = Cash on Delivery
         default: "CoD",
     },
     createdAt: {

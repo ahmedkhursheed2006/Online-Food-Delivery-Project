@@ -1,6 +1,7 @@
 export const productCard = [
   {
     id: 1,
+    name: "category",
     label: "Product Category",
     type: "select",
     options: [
@@ -20,25 +21,23 @@ export const productCard = [
   {
     id: 2,
     label: "Product Name",
+    name: "name",
     type: "text",
     placeholder: "Product Name",
   },
   {
     id: 3,
     label: "Ingredients",
+    name: "ingredients",
     type: "text",
     placeholder: "Ingredients",
   },
   {
     id: 4,
     label: "Product Price",
+    name: "price",
     type: "number",
     placeholder: "Product Price",
   },
-  {
-    id: 5,
-    label: "Product Image",
-    type: "file",
-    placeholder: "Product Image",
-  },
+  
 ];

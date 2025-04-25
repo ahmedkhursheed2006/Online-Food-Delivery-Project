@@ -6,7 +6,10 @@ export const useCustomerStore = create((set) => ({
   isLoggingIn: false,
   isSigningUp: false,
   isCheckingAuth: true,
- 
+  scrollSection: "",
+  products: [],
+  setScrollSection: (tab) => set({ scrollSection: tab }),
+
   checkAuth: async () => {
     try {
       const res = await axiosInstance.get("/customer/auth");
@@ -67,5 +70,15 @@ export const useCustomerStore = create((set) => ({
 
   googleLoginFailure: async () => {
     toast.error("Google Login Failed");
+  },
+
+  getProductsByCity: async () => {
+    try {
+      const res = await axiosInstance.get("/customer/getProducts");
+      set({ products: res.data });
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
   },
 }));

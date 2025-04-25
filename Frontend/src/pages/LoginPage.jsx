@@ -60,7 +60,7 @@ export default function LoginPage() {
           <h3 className="text-white text-5xl font-bold text-shadow-xs text-shadow-white">
             Login
           </h3>
-          <form className="flex flex-col gap-10 w-full" onSubmit={handleSubmit}>
+          <form className="flex flex-col gap-10 w-[95%]" onSubmit={handleSubmit}>
             <input
               type="email"
               name="email"

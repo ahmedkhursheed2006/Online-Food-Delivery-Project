@@ -1,5 +1,6 @@
 import { generateToken } from "../lib/utils.js";
 import Customer from "../models/customer.model.js";
+import Product from "../models/product.model.js";
 import bcrypt from "bcryptjs";
 import cloudinary from "cloudinary";
 
@@ -59,26 +60,25 @@ export const login = async (req, res) => {
     }
 
     generateToken(customer._id, res);
-    
+
     res.status(200).json({
       _id: customer._id,
       name: customer.name,
       email: customer.email,
     });
-    
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 export const googleAuth = async (req, res) => {
-  const { name, email } = req.body;  
+  const { name, email } = req.body;
   try {
     if (!name || !email) {
       return res.status(400).json({ message: "Google Login Failed" });
     }
     const customer = await Customer.findOne({ email });
-    if (customer) {      
+    if (customer) {
       generateToken(customer._id, res);
       return res.status(200).json({
         _id: customer._id,
@@ -92,24 +92,24 @@ export const googleAuth = async (req, res) => {
       email,
       isGoogleUser: true,
     });
-    
+
     if (newCustomer) {
       await newCustomer.save();
       generateToken(newCustomer._id, res);
-      
+
       res.status(201).json({
         _id: newCustomer._id,
         name: newCustomer.name,
         email: newCustomer.email,
         isGoogleUser: true,
-      })
+      });
     } else {
       res.status(500).json({ message: "Invalid User Data" });
     }
   } catch (error) {
     console.log(error);
-    
-    res.status(500).json({message: "Internal Server Error"})
+
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -127,5 +127,21 @@ export const checkAuth = (req, res) => {
     res.status(200).json(req.entity);
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getProductsByCity = async (req, res) => {
+  try {
+    const { city } = req.entity;
+    const products = await Product.find().populate({
+      path: "restaurantId",
+      match: { restaurantCity: city, status: "active" },
+      select: "restaurantName restaurantCity cuisineType",
+    });
+    const filtered = products.filter((p) => p.restaurantId !== null);
+    res.status(200).json(filtered);
+  } catch (error) {
+    console.error("Error fetching products:", err);
+    res.status(500).json({ message: "Server Error" });
   }
 };

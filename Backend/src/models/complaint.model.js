@@ -1,14 +1,13 @@
 import mongoose from "mongoose";
 
 const complaintSchema = new mongoose.Schema({
-    userId: {
+    customerId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "Customer",
         required: true,
     },
-    restaurantId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Restaurant",
+    complaintReason: {
+        type: String,
         required: true,
     },
     complaintText: {

@@ -1,17 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { userData } from "../dummyData/userData";
-
+import { useAdminStore } from "../useStores/useAdminStore";
 function RestaurantOverview() {
   const [searchType, setSearchType] = useState("name");
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredUsers, setFilteredUsers] = useState(userData.restaurants);
+  const { fetchedData, getAllRestaurants } = useAdminStore();
+  useEffect(() => {
+    getAllRestaurants();
+  }, []);
+  console.log("Fethced Data: ", fetchedData);
+
+  const [filteredUsers, setFilteredUsers] = useState(fetchedData);
+  console.log("FilteredUsers: ", filteredUsers);
+
+  useEffect(() => {
+    console.log("Fetched Data:", fetchedData);
+    setFilteredUsers(fetchedData); // update whenever fetchedData updates
+  }, [fetchedData]);
 
   useEffect(() => {
     if (searchTerm === "") {
-      setFilteredUsers(userData.restaurants);
+      setFilteredUsers(fetchedData);
     } else {
-      const results = userData.restaurants.filter((restaurant) => {
+      const results = fetchedData.filter((restaurant) => {
         const value = restaurant[searchType];
         return value
           ?.toString()
@@ -25,7 +37,9 @@ function RestaurantOverview() {
   return (
     <div className="p-6 bg-white/99 rounded-lg shadow-md w-full h-screen flex flex-col">
       <header className="text-right flex justify-between items-center">
-        <h4 className="text-[#1566E5] text-3xl font-semibold">Restaurant Overview</h4>
+        <h4 className="text-[#1566E5] text-3xl font-semibold">
+          Restaurant Overview
+        </h4>
       </header>
 
       <div className="flex items-center mt-4">
@@ -60,9 +74,13 @@ function RestaurantOverview() {
             {filteredUsers.length > 0 ? (
               filteredUsers.map((restaurant) => (
                 <tr key={restaurant.id}>
-                  <td className="border px-4 py-2">{restaurant.id}</td>
-                  <td className="border px-4 py-2">{restaurant.name}</td>
-                  <td className="border px-4 py-2">{restaurant.email}</td>
+                  <td className="border px-4 py-2">{restaurant._id}</td>
+                  <td className="border px-4 py-2">
+                    {restaurant.restaurantName}
+                  </td>
+                  <td className="border px-4 py-2">
+                    {restaurant.restaurantEmail}
+                  </td>
                 </tr>
               ))
             ) : (

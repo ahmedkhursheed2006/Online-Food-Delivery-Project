@@ -1,16 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { dishGroups } from "../dummyData/CategoryDishes";
 import { categories } from "../dummyData/FoodCategory";
-
+import { useCustomerStore } from "../useStores/useCustomerStore";
 function DeliveryMenu() {
+  const { products, getProductsByCity } = useCustomerStore();
   const [activeCategory, setActiveCategory] = useState(categories[0].id);
 
   const handleCategoryClick = (categoryId) => {
     setActiveCategory(categoryId);
   };
+  useEffect(() => {
+    getProductsByCity();
+  }, []);
 
+  0;
   const currentCategory = categories.find((cat) => cat.id === activeCategory);
-  const currentDishes = dishGroups[currentCategory.dishKey] || [];
+  const currentDishes = products.filter(
+    (product) => product.category === currentCategory.dishKey
+  );
 
   return (
     <div
@@ -52,7 +59,7 @@ function DeliveryMenu() {
               className="bg-[#FCECC7]/90 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow flex flex-col justify-between"
             >
               <div className="p-4 text-[#E53015] flex flex-col justify-between">
-                <h3 className="text-xl font-bold mb-2">{dish.dishName}</h3>
+                <h3 className="text-xl font-bold mb-2">{dish.name}</h3>
                 <p className="text-sm mb-3 line-clamp-2">
                   Ingredients: <br />
                   {dish.ingredients}

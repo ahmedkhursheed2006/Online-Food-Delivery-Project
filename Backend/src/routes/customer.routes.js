@@ -1,6 +1,6 @@
 import express from 'express';
 import {protectRoute} from "../middleware/auth.middleware.js"
-import {signup, login, logout, checkAuth, googleAuth} from "../controllers/customer.controller.js"
+import {signup, login, logout, checkAuth, googleAuth, getProductsByCity} from "../controllers/customer.controller.js"
 const router = express.Router();
 
 //                                  AUTH ROUTES
@@ -10,11 +10,8 @@ router.post("/login", login)
 router.post("/googleAuth", googleAuth)
 router.post("/logout", logout)
 router.get("/auth", protectRoute, checkAuth);
+router.get("/getProducts", protectRoute, getProductsByCity)
 
-//                     PROFILE VIEW AND UPDATE ROUTES (pending confirmation)
-
-// router.get("/profile", protectRoute , profile)  //View Profile
-// router.put("/profile", protectRoute , profile)  // Update Profile
 
 //                          ORDER VIEW AND UPDATE ROUTES
 
