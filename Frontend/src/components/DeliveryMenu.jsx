@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { dishGroups } from "../dummyData/CategoryDishes";
 import { categories } from "../dummyData/FoodCategory";
 import { useCustomerStore } from "../useStores/useCustomerStore";
+import { useOrderStore } from "../useStores/useOrderStore";
 function DeliveryMenu() {
+  const { addToCart } = useOrderStore();
   const { products, getProductsByCity } = useCustomerStore();
   const [activeCategory, setActiveCategory] = useState(categories[0].id);
 
@@ -13,11 +14,12 @@ function DeliveryMenu() {
     getProductsByCity();
   }, []);
 
-  0;
   const currentCategory = categories.find((cat) => cat.id === activeCategory);
   const currentDishes = products.filter(
     (product) => product.category === currentCategory.dishKey
   );
+
+ 
 
   return (
     <div
@@ -55,7 +57,7 @@ function DeliveryMenu() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {currentDishes.map((dish) => (
             <div
-              key={dish.id}
+              key={dish._id}
               className="bg-[#FCECC7]/90 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow flex flex-col justify-between"
             >
               <div className="p-4 text-[#E53015] flex flex-col justify-between">
@@ -68,7 +70,10 @@ function DeliveryMenu() {
                   <span className="text-lg font-bold">
                     ${dish.price.toFixed(2)}
                   </span>
-                  <button className="bg-[#E53015] text-[#FCECC7] px-3 py-1 rounded-full text-sm hover:bg-[#E53015]/90">
+                  <button
+                    onClick={() => addToCart(dish._id)}
+                    className="bg-[#E53015] text-[#FCECC7] px-3 py-1 rounded-full text-sm hover:bg-[#E53015]/90"
+                  >
                     Add +
                   </button>
                 </div>

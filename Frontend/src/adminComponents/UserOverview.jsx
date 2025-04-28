@@ -62,6 +62,7 @@ function UserOverview() {
               <th className="border px-4 py-2 text-left">ID</th>
               <th className="border px-4 py-2 text-left">Name</th>
               <th className="border px-4 py-2 text-left">Email</th>
+              <th className="border px-4 py-2 text-left">Status</th>
             </tr>
           </thead>
           <tbody>
@@ -71,6 +72,7 @@ function UserOverview() {
                   <td className="border px-4 py-2">{customer._id}</td>
                   <td className="border px-4 py-2">{customer.name}</td>
                   <td className="border px-4 py-2">{customer.email}</td>
+                  <td className="border px-4 py-2 capitalize">{customer.status}</td>
                 </tr>
               ))
             ) : (

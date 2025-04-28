@@ -71,6 +71,13 @@ export const fields = [
         placeholder: "Kitchen Password",
         label: "Kitchen Password",
       },
+      {
+        id: 18,
+        name: "restaurantPassword",
+        type: "text",
+        placeholder: "Kitchen Password",
+        label: "Kitchen Password",
+      },
     ],
   },
   // Owner/Manager Information

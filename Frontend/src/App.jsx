@@ -47,7 +47,10 @@ function App() {
             />
             <Route path="/FAQs" element={<FAQs />} />
 
-            <Route path="cart" element={<Cart />} />
+            <Route
+              path="/cart"
+              element={!authCustomer ? <LoginPage /> : <Cart />}
+            />
           </Route>
 
           <Route path="/restaurant" element={<RestaurantLayout />}>

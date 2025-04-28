@@ -42,6 +42,7 @@ function Navbar() {
         </Link>
         <div className="flex items-center justify-center gap-4  ">
           <NavLink
+          to={"/"}
             onClick={()=> setScrollSection("menuSection")}
             className="bg-[#66B39A] rounded-md text-lg p-2 inter-custom"
           >

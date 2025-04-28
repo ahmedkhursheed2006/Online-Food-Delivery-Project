@@ -7,10 +7,10 @@ import cookieParser from "cookie-parser";
 // routes
 import customerRoutes from "./routes/customer.routes.js";
 import restaurantRoutes from "./routes/restaurant.routes.js";
-import adminRoutes from "./routes/admin.routes.js"
-import complaintRoutes from "./routes/complaint.routes.js"
-import productRoutes from "./routes/product.route.js"
-
+import adminRoutes from "./routes/admin.routes.js";
+import complaintRoutes from "./routes/complaint.routes.js";
+import productRoutes from "./routes/product.route.js";
+import orderRoutes from "./routes/order.route.js";
 const app = express();
 
 const PORT = process.env.PORT || 5000;
@@ -28,9 +28,10 @@ app.use(
 
 app.use("/api/customer", customerRoutes);
 app.use("/api/restaurant", restaurantRoutes);
-app.use("/api/admin", adminRoutes)
-app.use("/api/complaint", complaintRoutes)
-app.use("/api/product", productRoutes)
+app.use("/api/admin", adminRoutes);
+app.use("/api/complaint", complaintRoutes);
+app.use("/api/product", productRoutes);
+app.use("/api/order", orderRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
