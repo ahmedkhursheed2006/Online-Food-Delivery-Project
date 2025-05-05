@@ -17,7 +17,7 @@ function deliveryOverview() {
           ?.toString()
           .toLowerCase()
           .includes(searchTerm.toLowerCase());
-      });
+      }); 
       setFilteredUsers(results);
     }
   }, [searchTerm, searchType]);

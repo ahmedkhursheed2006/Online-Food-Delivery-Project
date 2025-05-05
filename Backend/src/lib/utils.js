@@ -16,14 +16,14 @@ export const generateToken = (EntityID, res) => {
 
 export const restaurantValidationSchema = Joi.object({
   // 🏪 Restaurant Details
-  restaurantName: Joi.string().min(2).required(),
-  restaurantAddress: Joi.string().min(5).required(),
-  restaurantPhoneNumber: Joi.string()
+  name: Joi.string().min(2).required(),
+  address: Joi.string().min(5).required(),
+  phoneNumber: Joi.string()
     .pattern(/^[0-9]{11}$/)
     .required(),
-  restaurantEmail: Joi.string().email().required(),
-  restaurantPassword: Joi.string().min(6).required(),
-  restaurantCity: Joi.string(),
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+  city: Joi.string(),
   businessType: Joi.string()
     .valid("restaurant", "cloudKitchen", "takeOut")
     .required(),

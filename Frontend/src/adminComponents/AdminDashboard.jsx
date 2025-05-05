@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { adminDummyData } from "../dummyData/adminDummyData";
+import { useAdminStore } from "../useStores/useAdminStore";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -39,15 +40,16 @@ function Dashboard() {
     };
   };
 
+  const { getAllComplaints, fetchedData } = useAdminStore();
+  useEffect(() => {
+    getAllComplaints();
+  }, []);
   return (
     <div className="p-6 bg-white/99 rounded-lg shadow-md w-full h-screen flex flex-col">
       <header className="text-right flex justify-between items-center">
         <h4 className="text-[#1566E5] text-3xl font-semibold">
           Admin Dashboard
         </h4>
-        <button className="text-xl p-1 bg-[#1566E5] text-white ">
-          Generate Report
-        </button>
       </header>
       <section className="flex justify-between items-center mt-3 gap-2">
         <section className="flex flex-col justify-around items-center w-[80%]">
@@ -146,12 +148,12 @@ function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {adminDummyData.complaints.map((item, index) => (
+              {fetchedData.map((item, index) => (
                 <tr key={index} className="text-left text-xs">
-                  <td>{item.complaintId}</td>
-                  <td>{item.customerName}</td>
-                  <td>{item.issue}</td>
-                  <td>{item.status}</td>
+                  <td>{item._id}</td>
+                  <td>{item.customerId}</td>
+                  <td>{item.complaintReason}</td>
+                  <td>{item.complaintStatus}</td>
                 </tr>
               ))}
             </tbody>

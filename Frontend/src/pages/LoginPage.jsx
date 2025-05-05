@@ -60,7 +60,7 @@ export default function LoginPage() {
           <h3 className="text-white text-5xl font-bold text-shadow-xs text-shadow-white">
             Login
           </h3>
-          <form className="flex flex-col gap-10 w-[95%]" onSubmit={handleSubmit}>
+          <form className="flex flex-col gap-10 w-[83%]" onSubmit={handleSubmit}>
             <input
               type="email"
               name="email"
@@ -69,7 +69,7 @@ export default function LoginPage() {
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
               }
-              className="text-[#444] bg-white/95 p-2 text-base outline-0 shadow-white shadow-[0_0_2px_1px_rgba(0,0,0,0.1)]"
+              className="text-[#444] bg-white/95 p-2 pl-5 text-base outline-0  rounded-[7px]"
             />
             <input
               type="password"
@@ -79,16 +79,16 @@ export default function LoginPage() {
               onChange={(e) =>
                 setFormData({ ...formData, password: e.target.value })
               }
-              className="text-[#444] bg-white/95 p-2 text-base outline-0 shadow-white shadow-[0_0_2px_1px_rgba(0,0,0,0.1)]"
+              className="text-[#444] bg-white/95 p-2 pl-5 text-base outline-0 rounded-[7px]"
             />
             <button
               type="submit"
-              className="text-white bg-black/95 text-lg p-2 font-bold cursor-pointer"
+              className="text-white bg-black/95 text-lg p-2 font-bold cursor-pointer rounded-[7px]"
             >
               {isLoggingIn ? "Logging in..." : "Login"}
             </button>
           </form>
-          <p className="flex flex-col justify-center items-center text-white underline gap-1">
+          <p className="flex flex-col justify-center items-center text-white gap-5 text-sm font-bold font-[inter]">
             or Login with
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -97,7 +97,7 @@ export default function LoginPage() {
               width="100"
               height="100"
               viewBox="0 0 48 48"
-              className="size-10 bg-white rounded-full p-1"
+              className="size-10 bg-white rounded-[6px] p-1"
               onClick={() => Googlelogin()}
             >
               <path

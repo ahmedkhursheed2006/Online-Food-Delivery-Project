@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 
 import Products from "../restaurantComponents/Products";
 import Orders from "../restaurantComponents/Orders";
@@ -7,24 +7,19 @@ import Dashboard from "../restaurantComponents/Dashboard";
 import { useRestaurantStore } from "../useStores/useRestaurantStore";
 // Dummy component placeholders
 
-const Promotions = () => <div>🎉 Manage Promotions</div>;
 
 function RestaurantUI() {
-  const { activeTab} = useRestaurantStore();
-  
+  const { activeTab } = useRestaurantStore();
+
 
   const renderActiveComponent = () => {
     switch (activeTab) {
-      case "Dashboard":
-        return <Dashboard />;
       case "Products":
         return <Products />;
       case "Orders":
         return <Orders />;
       case "Analytics":
         return <Analytics />;
-      case "Promotions":
-        return <Promotions />;
       default:
         return <Dashboard />;
     }

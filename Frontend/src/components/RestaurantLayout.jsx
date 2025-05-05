@@ -4,20 +4,10 @@ import RestaurantNavbar from "../restaurantComponents/RestaurantNavbar";
 import Sidebar from "../restaurantComponents/Sidebar";
 import { useRestaurantStore } from "../useStores/useRestaurantStore";
 import RestaurantLoginPage from "../restaurantComponents/RestaurantLoginPage";
-import CreateKitchenPage from "../pages/CreateKitchenPage";
 
 function RestaurantLayout() {
-  const { authRestaurant, activeComponent } = useRestaurantStore();
-  const renderComponent = () => {
-    switch (activeComponent) {
-      case "Login":
-        return <RestaurantLoginPage />;
-      case "Signup":
-        return <CreateKitchenPage />;
-      default:
-        return <RestaurantLoginPage />;
-    }
-  };
+  const { authRestaurant } = useRestaurantStore();
+
   return (
     <>
       {authRestaurant ? (
@@ -31,7 +21,7 @@ function RestaurantLayout() {
           </div>
         </>
       ) : (
-        renderComponent()
+        <RestaurantLoginPage />
       )}
     </>
   );

@@ -31,7 +31,7 @@ function DeliveryMenu() {
       </h2>
       {/* Category Navbar */}
       <nav className="bg-black/70 p-4 ">
-        <div className="flex gap-3 overflow-x-auto pb-2 hide-scrollbar">
+        <div className="flex gap-3 overflow-x-scroll pb-2 ">
           {categories.map((category) => (
             <button
               key={category.id}

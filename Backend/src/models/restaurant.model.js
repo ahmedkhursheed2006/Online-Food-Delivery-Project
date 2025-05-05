@@ -2,19 +2,19 @@ import mongoose from "mongoose";
 
 const restaurantSchema = new mongoose.Schema({
   // 🏪 Restaurant Details
-  restaurantName: {
+  name: {
     type: String,
     required: true,
   },
-  restaurantAddress: {
+ address: {
     type: String,
     required: true,
   },
-  restaurantPhoneNumber: {
+  phoneNumber: {
     type: String,
     required: true,
   },
-  restaurantEmail: {
+  email: {
     type: String,
     required: true,
     unique: true,
@@ -77,7 +77,7 @@ const restaurantSchema = new mongoose.Schema({
   },
 
   // 🔒 Access Info
-  restaurantPassword: {
+  password: {
     type: String,
     required: true,
     minlength: 6,
@@ -92,7 +92,7 @@ const restaurantSchema = new mongoose.Schema({
   // 🛡️ Status Tracking
   status: {
     type: String,
-    enum: ["active", "inactive", "warned", "disabled", "banned"],
+    enum: ["active", "warned", "banned"],
     default: "active",
   },
 

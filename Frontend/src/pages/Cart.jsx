@@ -1,25 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { MdDeliveryDining } from "react-icons/md";
 import { ImCross, ImPlus, ImMinus } from "react-icons/im";
-import { IoIosRadioButtonOff, IoIosRadioButtonOn } from "react-icons/io";
 import { useOrderStore } from "../useStores/useOrderStore";
 
 function Cart() {
-  const { viewCart, cart, cartUpdate } = useOrderStore();
+  const { viewCart, cart, cartUpdate, placeOrder, removeFromCart } =
+    useOrderStore();
 
   // Track the amounts for each item in the cart
   const [amounts, setAmounts] = useState([]);
-  const [selected, setSelected] = useState(true);
+  // Track which item is being updated
+  const [updateItem, setUpdateItem] = useState({});
+
+  const handleUpdateItem = (id, amount) => {
+    cartUpdate(id, amount);
+    setUpdateItem((prev) => ({ ...prev, [id]: false }));
+  };
+
+  const handlePlaceOrder = async (id) => {
+    await placeOrder(id);
+    await viewCart();
+  };
 
   // Fetch cart data when the component is mounted
   useEffect(() => {
     viewCart();
   }, []);
 
-  // Initialize amounts when cart data changes
   useEffect(() => {
     if (cart.length > 0) {
-      const initialAmounts = cart.map((item) => item.totalItem || 0);
+      const initialAmounts = cart.map((item) => item.amount || 0);
       setAmounts(initialAmounts);
     } else {
       setAmounts([]);
@@ -27,24 +37,19 @@ function Cart() {
   }, [cart]);
 
   // Handle change in the amount for a specific item
-  const handleAmountChange = (index, newAmount) => {
+  const handleAmountChange = (index, newAmount, id) => {
     const updatedAmounts = [...amounts];
     updatedAmounts[index] = newAmount;
     setAmounts(updatedAmounts);
+
+    // Set the item as being updated
+    setUpdateItem((prev) => ({ ...prev, [id]: true }));
   };
 
-  const updatedCart = cart.map((item, index) => ({
-    ...item,
-    totalItem: amounts[index],
-  }));
-
-  // Handle checkout when user exits the cart
-  useEffect(() => {
-    return () => {
-      // Update cart in backend when user exits or page changes
-      cartUpdate(updatedCart);
-    };
-  }, [amounts]); // Trigger update when amounts change
+  const removeItem = async (id) => {
+    removeFromCart(id);
+    viewCart();
+  };
 
   return (
     <div className="h-screen flex items-center justify-center">
@@ -58,21 +63,12 @@ function Cart() {
         {cart.map((item, index) => (
           <article
             key={item._id || index}
-            className="w-full h-[150px] flex border-b-2 items-center justify-between text-red-600"
+            className="w-full h-[150px] flex border-b-2 items-center justify-around text-red-600"
           >
-            <ImCross className="size-5 ml-5" />
-            {selected ? (
-              <IoIosRadioButtonOff
-                className="size-5"
-                onClick={() => setSelected(!selected)}
-              />
-            ) : (
-              <IoIosRadioButtonOn
-                className="size-5"
-                onClick={() => setSelected(!selected)}
-              />
-            )}
-
+            <ImCross
+              className="size-5 ml-5"
+              onClick={() => removeItem(item._id)}
+            />
             <img
               src={item.image}
               alt="Product Img"
@@ -80,7 +76,7 @@ function Cart() {
             />
 
             <p className="aspect-video h-[90%] flex items-center justify-center text-xl">
-              {item.orderItem}
+              {item.name}
             </p>
 
             <div className="aspect-video h-[90%] flex items-center justify-between">
@@ -88,30 +84,45 @@ function Cart() {
                 className="size-8 p-2 bg-red-400 text-white rounded-md cursor-pointer"
                 onClick={() => {
                   if (amounts[index] > 0) {
-                    handleAmountChange(index, amounts[index] - 1);
+                    handleAmountChange(index, amounts[index] - 1, item._id);
                   }
                 }}
               />
               <input
                 className="text-3xl font-semibold w-[50px] text-center outline-none border-2 rounded-lg"
                 value={amounts[index]}
-                onChange={(e) =>
-                  handleAmountChange(index, Number(e.target.value))
-                }
+                readOnly
               />
               <ImPlus
                 className="size-8 p-2 bg-red-400 text-white rounded-md cursor-pointer"
-                onClick={() => handleAmountChange(index, amounts[index] + 1)}
+                onClick={() => {
+                  handleAmountChange(index, amounts[index] + 1, item._id);
+                }}
               />
             </div>
 
             <p className="aspect-video h-[90%] flex items-center justify-center text-3xl font-bold">
-              ${amounts[index] * 10}
+              ${amounts[index] * item.price}
             </p>
 
-            <button className="bg-red-600 text-white font-semibold text-2xl rounded-lg p-2">
-              Checkout
-            </button>
+            {/* Show Update or Checkout based on update state for the item */}
+            {updateItem[item._id] === true ? (
+              <button
+                type="submit"
+                onClick={() => handleUpdateItem(item._id, amounts[index])}
+                className="bg-red-600 text-white font-semibold text-2xl rounded-lg p-2 cursor-pointer"
+              >
+                Update
+              </button>
+            ) : (
+              <button
+                type="submit"
+                onClick={() => handlePlaceOrder(item._id)}
+                className="bg-red-600 text-white font-semibold text-2xl rounded-lg p-2 cursor-pointer"
+              >
+                Checkout
+              </button>
+            )}
           </article>
         ))}
       </div>

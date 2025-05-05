@@ -74,13 +74,39 @@ export const useAdminStore = create((set) => ({
   getAllAdmins: async () => {
     set({ fetchingData: true });
     try {
-      const res = await axiosInstance.get("/admin/allAdmins");      
+      const res = await axiosInstance.get("/admin/allAdmins");
       set({ fetchedData: res.data });
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
     } finally {
       set({ fetchingData: false });
+    }
+  },
+  getAllComplaints: async () => {
+    set({ fetchingData: true });
+    try {
+      const res = await axiosInstance.get("/admin/allComplaints");
+      set({ fetchedData: res.data });
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    } finally {
+      set({ fetchingData: false });
+    }
+  },
+
+  updateStatus: async (data) => {
+    const { UserId } = data;
+
+    try {
+      await axiosInstance.put(`/admin/updateStatus/${UserId}`, {
+        status: data.status,
+      });
+      toast.success(`Status Updated to ${data.status}`);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
     }
   },
 }));

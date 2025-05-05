@@ -21,12 +21,25 @@ function App() {
   const { checkRestaurantAuth, authRestaurant } = useRestaurantStore();
   const { checkAuth, authCustomer } = useCustomerStore();
   const { authAdmin } = useAdminStore();
+
   useEffect(() => {
-    checkRestaurantAuth();
+    // Check restaurant auth and set loading to false after checking
+    const fetchRestaurantAuth = async () => {
+      await checkRestaurantAuth();
+    };
+
+    fetchRestaurantAuth();
   }, [checkRestaurantAuth]);
+
   useEffect(() => {
-    checkAuth();
+    // Check customer auth and set loading to false after checking
+    const fetchCustomerAuth = async () => {
+      await checkAuth();
+    };
+
+    fetchCustomerAuth();
   }, [checkAuth]);
+
   return (
     <>
       <Toaster />
@@ -77,7 +90,7 @@ function App() {
             <Route
               index
               element={
-                authRestaurant ? <RestaurantUI /> : <Navigate to="/login" />
+                authRestaurant ? <RestaurantUI /> : <Navigate to="login" />
               }
             />
           </Route>

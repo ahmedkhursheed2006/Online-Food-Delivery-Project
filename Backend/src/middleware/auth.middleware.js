@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { decode } from "jsonwebtoken";
 import Customer from "../models/customer.model.js";
 import Restaurant from "../models/restaurant.model.js";
 import Admin from "../models/admin.model.js";
@@ -35,6 +35,7 @@ export const protectRoute = async (req, res, next) => {
     }
 
     req.entity = entity;
+
     next();
   } catch (error) {
     console.error("Error in protectRoute:", error.message);

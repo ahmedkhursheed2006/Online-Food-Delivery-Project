@@ -5,12 +5,12 @@ export default function LoginPage() {
   const { login, isLoggingIn } = useAdminStore();
 
   const [formData, setFormData] = useState({
-    adminEmail: "",
-    adminPassword: "",
+    email: "",
+    password: "",
   });
   const validateForm = () => {
-    if (!formData.adminEmail.trim()) return toast.error("Email is Required!");
-    if (!formData.adminPassword) return toast.error("Password is Required!");
+    if (!formData.email.trim()) return toast.error("Email is Required!");
+    if (!formData.password) return toast.error("Password is Required!");
     return true;
   };
   const handleSubmit = (e) => {
@@ -35,9 +35,9 @@ export default function LoginPage() {
               type="email"
               name="email"
               placeholder="Email"
-              value={formData.adminEmail}
+              value={formData.email}
               onChange={(e) =>
-                setFormData({ ...formData, adminEmail: e.target.value })
+                setFormData({ ...formData, email: e.target.value })
               }
               className="text-[#444] bg-white/95 p-2 text-base outline-0 shadow-white shadow-[0_0_2px_1px_rgba(0,0,0,0.1)]"
             />
@@ -45,9 +45,9 @@ export default function LoginPage() {
               type="password"
               name="password"
               placeholder="Password"
-              value={formData.adminPassword}
+              value={formData.password}
               onChange={(e) =>
-                setFormData({ ...formData, adminPassword: e.target.value })
+                setFormData({ ...formData, password: e.target.value })
               }
               className="text-[#444] bg-white/95 p-2 text-base outline-0 shadow-white shadow-[0_0_2px_1px_rgba(0,0,0,0.1)]"
             />

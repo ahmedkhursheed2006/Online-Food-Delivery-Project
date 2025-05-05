@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { userData } from "../dummyData/userData";
 import { adminForm } from "../dummyData/adminSignupForm";
 import { useAdminStore } from "../useStores/useAdminStore";
+import toast from "react-hot-toast";
 function AdminOverview() {
   const [searchType, setSearchType] = useState("name");
   const [cardOpen, setCardOpen] = useState(false);
@@ -12,14 +12,6 @@ function AdminOverview() {
   useEffect(() => {
     getAllAdmins();
   }, []);
-  console.log("Fethced Data: ", fetchedData);
-
-  const [filteredUsers, setFilteredUsers] = useState(fetchedData);
-
-  useEffect(() => {
-    console.log("Fetched Data:", fetchedData);
-    setFilteredUsers(fetchedData); // update whenever fetchedData updates
-  }, [fetchedData]);
 
   const initialFormState = adminForm.reduce((acc, input) => {
     acc[input.name] = "";
@@ -36,7 +28,6 @@ function AdminOverview() {
   };
   const validateForm = () => {
     for (let key in formData) {
-      console.log(formData);
       if (!formData[key]) {
         return toast.error(`${key} is required`); // If any field is empty, return false
       }
@@ -62,20 +53,13 @@ function AdminOverview() {
     setFormData(initialFormState);
   };
 
-  useEffect(() => {
-    if (searchTerm === "") {
-      setFilteredUsers(fetchedData);
-    } else {
-      const results = fetchedData.filter((admin) => {
-        const value = admin[searchType];
-        return value
-          ?.toString()
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-      });
-      setFilteredUsers(results);
-    }
-  }, [searchTerm, searchType, fetchedData]);
+  const filteredUsers = fetchedData.filter((user) => {
+    if (searchTerm === "") return true;
+
+    const value = searchType === "id" ? user._id : user[searchType]?.toString();
+
+    return value?.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   return (
     <div className="relative p-6 bg-white/99 rounded-lg shadow-md w-full h-screen flex flex-col">
@@ -103,7 +87,7 @@ function AdminOverview() {
         </select>
         <input
           type="text"
-          placeholder="Search users..."
+          placeholder="Search admins..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="border border-gray-300 p-2 rounded w-full max-w-sm "
@@ -122,16 +106,16 @@ function AdminOverview() {
           <tbody>
             {filteredUsers.length > 0 ? (
               filteredUsers.map((admin) => (
-                <tr key={admin.id}>
+                <tr key={admin._id}>
                   <td className="border px-4 py-2">{admin._id}</td>
-                  <td className="border px-4 py-2">{admin.adminName}</td>
-                  <td className="border px-4 py-2">{admin.adminEmail}</td>
+                  <td className="border px-4 py-2">{admin.name}</td>
+                  <td className="border px-4 py-2">{admin.email}</td>
                 </tr>
               ))
             ) : (
               <tr>
                 <td colSpan="3" className="text-center py-4 text-gray-500">
-                  No Deliveries found.
+                  No admins found.
                 </td>
               </tr>
             )}
@@ -150,10 +134,7 @@ function AdminOverview() {
         } absolute top-[10%] left-[20%] bg-white shadow-2xl shadow-black h-[450px] w-[450px] z-10 overflow-y-scroll hide-scrollbar p-2 rounded-xl`}
       >
         <div className="relative">
-          <p
-            className="absolute right-2 cursor-pointer"
-            onClick={handleClose}
-          >
+          <p className="absolute right-2 cursor-pointer" onClick={handleClose}>
             ❌
           </p>
           <h3 className="text-center font-semibold text-xl">Admin Signup</h3>

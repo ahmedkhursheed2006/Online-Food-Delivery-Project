@@ -9,6 +9,7 @@ export const useRestaurantStore = create((set) => ({
   activeTab: "Dashboard",
   activeComponent: "Login",
   products: [],
+  orders: [],
 
   setActiveTab: (tab) => set({ activeTab: tab }),
   setActiveComponent: (tab) => set({ activeComponent: tab }),
@@ -88,4 +89,15 @@ export const useRestaurantStore = create((set) => ({
       toast.error(error.response.data.message);
     }
   },
+
+  getOrder: async () => {
+    try {
+      const res = await axiosInstance.get("/order/getOrders")
+      set({orders: res.data})
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message)
+      
+    }
+  }
 }));

@@ -2,10 +2,10 @@ import React from "react";
 import { useState } from "react";
 import { useRestaurantStore } from "../useStores/useRestaurantStore";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { MdDashboard, MdDeliveryDining, MdDiscount } from "react-icons/md";
+import { MdDashboard, MdDeliveryDining } from "react-icons/md";
 import { IoIosStats } from "react-icons/io";
 import { BiDish } from "react-icons/bi";
-function Sidebar() {
+function Sidebar() { 
   const [toggle, setToggle] = useState(true);
   const { setActiveTab, activeTab } = useRestaurantStore();
   const navItems = [
@@ -25,10 +25,7 @@ function Sidebar() {
       label: "Analytics",
       icon: <IoIosStats className="size-6 text-[#FCECC7]" />,
     },
-    {
-      label: "Promotions",
-      icon: <MdDiscount className="size-6 text-[#FCECC7]" />,
-    },
+    
   ];
 
   return (

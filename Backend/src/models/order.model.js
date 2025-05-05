@@ -1,57 +1,50 @@
 import mongoose from "mongoose";
 
-const orderSchema = new mongoose.Schema({
-  customerId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Customer",
-    required: true,
+const orderSchema = new mongoose.Schema(
+  {
+    restaurantId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Restaurant",
+      required: true,
+    },
+    customerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Customer",
+      required: true,
+    },
+    orderItem: {
+      itemId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product", // or whatever your item model is called
+        required: true,
+      },
+      name: String,
+      quantity: Number,
+      price: Number,
+    },
+
+    totalAmount: {
+      type: Number,
+      required: true,
+    },
+    paymentMethod: {
+      type: String,
+      default: "Cash on Delivery",
+      required: true,
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["Paid", "Pending", "Failed"],
+      default: "Pending",
+    },
+    orderStatus: {
+      type: String,
+      enum: ["Pending", "Preparing", "On the Way", "Delivered", "Cancelled"],
+      default: "Pending",
+    },
   },
-  restaurantId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Restaurant",
-    required: true,
-  },
-  productId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Product",
-    required: true,
-  },
-  totalItem: {
-    type: Number,
-    default: 1,
-  },
-  totalPrice: {
-    type: Number,
-  },
-  orderItem: {
-    type: String,
-  },
-  orderStatus: {
-    type: String,
-    enum: ["pending", "completed", "cancelled"],
-    default: "pending",
-  },
-  paymentStatus: {
-    type: String,
-    enum: ["paid", "unpaid"],
-    default: "unpaid",
-  },
-  paymentMethod: {
-    type: String,
-    enum: ["creditCard", "debitCard", "CoD"], //CoD = Cash on Delivery
-    default: "CoD",
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
-  deliveryAddress: {
-    type: String,
-  },
-});
-const Order = mongoose.model("Order", orderSchema, "orders");
+  { timestamps: true } // adds createdAt and updatedAt
+);
+
+const Order = mongoose.model("Order", orderSchema);
 export default Order;

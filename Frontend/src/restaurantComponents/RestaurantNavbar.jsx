@@ -9,7 +9,7 @@ function RestaurantNavbar() {
   return (
     <header>
       <nav className="flex justify-between items-center bg-white/80 h-20 px-1">
-        <Link to={"/restaurant-dashboard"}>
+        <Link to={"/restaurant"}>
           <img
             src="/DoorDash-Business-v2.png"
             alt="DoorDash-Business"

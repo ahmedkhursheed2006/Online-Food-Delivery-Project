@@ -1,34 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { useAdminStore } from "../useStores/useAdminStore";
+import StatusSelect from "./StatusSelect";
 function UserOverview() {
-  const { fetchedData, getAllCustomers } = useAdminStore();
+  const { fetchedData, getAllCustomers, updateStatus } = useAdminStore();
   const [searchType, setSearchType] = useState("name");
 
   const [searchTerm, setSearchTerm] = useState("");
   useEffect(() => {
     getAllCustomers();
   }, []);
-  console.log(fetchedData);
-  const [filteredUsers, setFilteredUsers] = useState(fetchedData);
-  useEffect(() => {
-    console.log("Fetched Data:", fetchedData);
-    setFilteredUsers(fetchedData); // update whenever fetchedData updates
-  }, [fetchedData]);
 
-  useEffect(() => {
-    if (searchTerm === "") {
-      setFilteredUsers(fetchedData);
-    } else {
-      const results = fetchedData.filter((user) => {
-        const value = user[searchType];
-        return value
-          ?.toString()
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-      });
-      setFilteredUsers(results);
-    }
-  }, [searchTerm, searchType]);
+  const filteredUsers = fetchedData.filter((user) => {
+    if (searchTerm === "") return true;
+
+    const value = searchType === "id" ? user._id : user[searchType]?.toString();
+
+    return value?.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   return (
     <div className="p-6 bg-white/99 rounded-lg shadow-md w-full h-screen flex flex-col">
@@ -72,7 +60,25 @@ function UserOverview() {
                   <td className="border px-4 py-2">{customer._id}</td>
                   <td className="border px-4 py-2">{customer.name}</td>
                   <td className="border px-4 py-2">{customer.email}</td>
-                  <td className="border px-4 py-2 capitalize">{customer.status}</td>
+                  <td className="border px-4 py-2">
+                    <StatusSelect
+                      currentStatus={customer.status}
+                      onChangeStatus={(newStatus) => {
+                        updateStatus({
+                          UserId: customer._id,
+                          status: newStatus,
+                        });
+
+                        // Optional: Optimistic UI update if Zustand doesn't auto-rerender
+                        const updated = fetchedData.map((u) =>
+                          u._id === customer._id
+                            ? { ...u, status: newStatus }
+                            : u
+                        );
+                        useAdminStore.setState({ fetchedData: updated });
+                      }}
+                    />
+                  </td>
                 </tr>
               ))
             ) : (

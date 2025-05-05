@@ -10,7 +10,6 @@ function Products() {
 
   useEffect(() => {
     getProduct();
-    console.log(products);
   }, []);
 
   const initialFormState = productCard.reduce((acc, input) => {
@@ -28,7 +27,6 @@ function Products() {
   };
   const validateForm = () => {
     for (let key in formData) {
-      console.log(formData);
       if (!formData[key]) {
         return toast.error(`${key} is required`); // If any field is empty, return false
       }
@@ -37,7 +35,7 @@ function Products() {
     return true; // All fields are filled
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const success = validateForm();

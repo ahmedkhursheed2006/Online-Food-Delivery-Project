@@ -1,76 +1,123 @@
-import Order from "../models/order.model.js";
+import Cart from "../models/cart.model.js";
 import Product from "../models/product.model.js";
-import Restaurant from "../models/restaurant.model.js";
+import Order from "../models/order.model.js";
+import Customer from "../models/customer.model.js";
 
-export const addToCart = async (req, res) => {
+export const placeOrder = async (req, res) => {
   try {
-    const { _id } = req.entity;
-    const productId = req.params.id;
+    const { cartId } = req.body;
+    const itemForOrder = await Cart.findById(cartId);
 
-    const product = await Product.findById(productId);
-    if (!product) {
-      return res.status(400).json({ message: "Product does not Exist" });
+    if (!itemForOrder) {
+      return res.status(400).json({ message: "Item Id not found" });
     }
-    const existingOrder = await Order.findOne({ productId });
-    if (existingOrder) {
-      const updatedOrder = await Order.findOneAndUpdate(
-        { productId },
-        { $inc: { totalItem: 1 } },
-        { new: true }
-      );
-      res.status(201).json({ message: "Added to Cart" });
-      return updatedOrder;
-    }
-    const restaurantId = product.restaurantId;
-    const restaurant = await Restaurant.findById(restaurantId);
-    if (!restaurant) {
-      return res.status(400).json({ message: "Restaurant does not Exist" });
-    }
-    const newOrder = new Order({
-      productId: productId,
-      restaurantId: restaurantId,
-      customerId: _id,
-      orderItem: product.name,
-      totalAmount: product.price,
+
+    const order = new Order({
+      restaurantId: itemForOrder.restaurantId,
+      customerId: itemForOrder.customerId,
+      orderItem: {
+        itemId: itemForOrder.productId,
+        name: itemForOrder.name,
+        quantity: itemForOrder.amount,
+        price: itemForOrder.price,
+      },
+
+      totalAmount: Number(itemForOrder.price * itemForOrder.amount),
+      paymentMethod: "Cash on Delivery",
+      paymentStatus: "Pending",
+      orderStatus: "Pending",
     });
 
-    await newOrder.save();
-
-    res.status(201).json({ message: "Added to Cart" });
+    await order.save();
+    await Cart.findByIdAndDelete(cartId);
+    res.status(201).json({ message: "Order Placed" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-export const viewCart = async (req, res) => {
+export const getOrders = async (req, res) => {
   try {
-    const cart = await Order.find({ customerId: req.entity._id }).sort({
-      createdAt: -1,
-    });
+    const orders = await Order.find({ restaurantId: req.entity._id });
 
-    res.status(201).json(cart);
+    if (!orders || orders.length === 0) {
+      return res.status(200).json({ message: "No Orders Found" });
+    }
+
+    const allOrderDetails = await Promise.all(
+      orders.map(async (order) => {
+        const customer = await Customer.findById(order.customerId);
+
+        if (!customer) {
+          return {
+            label: "Error",
+            data: [
+              { label: "Customer Not Found", placeholder: order.customerId },
+            ],
+          };
+        }
+        if (order.orderStatus != "On the Way") {
+          return [
+            {
+              label: "Recipient Details",
+              data: [
+                { label: "Recepient Name", placeholder: customer.name },
+                { label: "Recepient Address", placeholder: customer.city },
+                { label: "Recepient Id", placeholder: customer._id },
+              ],
+            },
+            {
+              
+              label: "Order Details",
+              data: [
+                { label: "Order Id", placeholder: order._id },
+                { label: "Placed on", placeholder: order.createdAt },
+                { label: "Order Item", placeholder: order.orderItem.name },
+                { label: "Item Amount", placeholder: order.totalAmount },
+                { label: "Payment Method", placeholder: order.paymentMethod },
+                { label: "Payment Status", placeholder: order.paymentStatus },
+                { label: "Order Status", placeholder: order.orderStatus },
+              ],
+            },
+          ];
+        }
+      })
+    );
+
+    res.status(200).json(allOrderDetails);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-export const updateCart = async (req, res) => {
+export const cancelOrder = async (req, res) => {
   try {
-    const updatedCart = req.body;
-    const updatePromises = updatedCart.map((item) => {
-      return Order.findOneAndUpdate(
-        { productId: item.productId }, // Find by productId field
-        { $set: { totalItem: item.totalItem } }, // Update the quantity
-        { new: true }
-      );
-    });
-    await Promise.all(updatePromises);
-
-    res.status(200).json({ message: "Cart updated successfully ✅" });
+    const { id } = req.params;
+    await Order.findByIdAndDelete(id);
+    res.status(201).json({ message: "Order Cancelled" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to update cart ❌" });
+    console.log(error);
+    res.status(500).json({ erorr: "Internal Server Error" });
+  }
+};
+
+export const updateOrder = async (req, res) => {
+  try {
+    const { orderStatus } = req.body;
+    const { id } = req.params;
+    const order = await Order.findByIdAndUpdate(
+      id,
+      { $set: { orderStatus } },
+      { new: true }
+    );
+    if (!order) {
+      res.status(201).json({ message: "Order not Found" });
+    }
+    res.status(201).json({ message: "Status Updated" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };

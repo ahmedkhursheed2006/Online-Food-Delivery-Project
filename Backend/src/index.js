@@ -11,6 +11,7 @@ import adminRoutes from "./routes/admin.routes.js";
 import complaintRoutes from "./routes/complaint.routes.js";
 import productRoutes from "./routes/product.route.js";
 import orderRoutes from "./routes/order.route.js";
+import cartRoutes from "./routes/cart.routes.js"
 const app = express();
 
 const PORT = process.env.PORT || 5000;
@@ -32,6 +33,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/complaint", complaintRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/order", orderRoutes);
+app.use("/api/cart", cartRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

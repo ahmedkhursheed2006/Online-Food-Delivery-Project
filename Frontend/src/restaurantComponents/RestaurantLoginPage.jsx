@@ -7,13 +7,13 @@ export default function RestaurantLoginPage() {
   const { login, isLoggingIn, setActiveComponent } = useRestaurantStore();
 
   const [formData, setFormData] = useState({
-    restaurantEmail: "",
-    restaurantPassword: "",
+    email: "",
+    password: "",
   });
   const validateForm = () => {
-    if (!formData.restaurantEmail.trim())
+    if (!formData.email.trim())
       return toast.error("Email is Required!");
-    if (!formData.restaurantPassword)
+    if (!formData.password)
       return toast.error("Password is Required!");
     return true;
   };
@@ -39,9 +39,9 @@ export default function RestaurantLoginPage() {
               type="email"
               name="email"
               placeholder="Email"
-              value={formData.restaurantEmail}
+              value={formData.email}
               onChange={(e) =>
-                setFormData({ ...formData, restaurantEmail: e.target.value })
+                setFormData({ ...formData, email: e.target.value })
               }
               className="text-[#444] bg-white/95 p-2 text-base outline-0 shadow-white shadow-[0_0_2px_1px_rgba(0,0,0,0.1)]"
             />
@@ -49,9 +49,9 @@ export default function RestaurantLoginPage() {
               type="password"
               name="password"
               placeholder="Password"
-              value={formData.restaurantPassword}
+              value={formData.password}
               onChange={(e) =>
-                setFormData({ ...formData, restaurantPassword: e.target.value })
+                setFormData({ ...formData, password: e.target.value })
               }
               className="text-[#444] bg-white/95 p-2 text-base outline-0 shadow-white shadow-[0_0_2px_1px_rgba(0,0,0,0.1)]"
             />

@@ -1,45 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { userData } from "../dummyData/userData";
 import { useAdminStore } from "../useStores/useAdminStore";
-function RestaurantOverview() {
+import StatusSelect from "./StatusSelect";
+function UserOverview() {
+  const { fetchedData, getAllRestaurants, updateStatus } = useAdminStore();
   const [searchType, setSearchType] = useState("name");
 
   const [searchTerm, setSearchTerm] = useState("");
-  const { fetchedData, getAllRestaurants } = useAdminStore();
   useEffect(() => {
     getAllRestaurants();
   }, []);
-  console.log("Fethced Data: ", fetchedData);
 
-  const [filteredUsers, setFilteredUsers] = useState(fetchedData);
-  console.log("FilteredUsers: ", filteredUsers);
+  const filteredUsers = fetchedData.filter((user) => {
+    if (searchTerm === "") return true;
 
-  useEffect(() => {
-    console.log("Fetched Data:", fetchedData);
-    setFilteredUsers(fetchedData); // update whenever fetchedData updates
-  }, [fetchedData]);
+    const value = searchType === "id" ? user._id : user[searchType]?.toString();
 
-  useEffect(() => {
-    if (searchTerm === "") {
-      setFilteredUsers(fetchedData);
-    } else {
-      const results = fetchedData.filter((restaurant) => {
-        const value = restaurant[searchType];
-        return value
-          ?.toString()
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-      });
-      setFilteredUsers(results);
-    }
-  }, [searchTerm, searchType]);
+    return value?.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   return (
     <div className="p-6 bg-white/99 rounded-lg shadow-md w-full h-screen flex flex-col">
       <header className="text-right flex justify-between items-center">
-        <h4 className="text-[#1566E5] text-3xl font-semibold">
-          Restaurant Overview
-        </h4>
+        <h4 className="text-[#1566E5] text-3xl font-semibold">Restaurant Overview</h4>
       </header>
 
       <div className="flex items-center mt-4">
@@ -50,11 +32,11 @@ function RestaurantOverview() {
         >
           <option value="name">Name</option>
           <option value="id">ID</option>
-          <option value="email">Email</option>
+          <option value="email">Email</option> 
         </select>
         <input
           type="text"
-          placeholder="Search users..."
+          placeholder="Search restaurants..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="border border-gray-300 p-2 rounded w-full max-w-sm "
@@ -68,6 +50,7 @@ function RestaurantOverview() {
               <th className="border px-4 py-2 text-left">ID</th>
               <th className="border px-4 py-2 text-left">Name</th>
               <th className="border px-4 py-2 text-left">Email</th>
+              <th className="border px-4 py-2 text-left">Status</th>
             </tr>
           </thead>
           <tbody>
@@ -75,18 +58,33 @@ function RestaurantOverview() {
               filteredUsers.map((restaurant) => (
                 <tr key={restaurant.id}>
                   <td className="border px-4 py-2">{restaurant._id}</td>
+                  <td className="border px-4 py-2">{restaurant.name}</td>
+                  <td className="border px-4 py-2">{restaurant.email}</td>
                   <td className="border px-4 py-2">
-                    {restaurant.restaurantName}
-                  </td>
-                  <td className="border px-4 py-2">
-                    {restaurant.restaurantEmail}
+                    <StatusSelect
+                      currentStatus={restaurant.status}
+                      onChangeStatus={(newStatus) => {
+                        updateStatus({
+                          UserId: restaurant._id,
+                          status: newStatus,
+                        });
+
+                        // Optional: Optimistic UI update if Zustand doesn't auto-rerender
+                        const updated = fetchedData.map((u) =>
+                          u._id === restaurant._id
+                            ? { ...u, status: newStatus }
+                            : u
+                        );
+                        useAdminStore.setState({ fetchedData: updated });
+                      }}
+                    />
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
                 <td colSpan="3" className="text-center py-4 text-gray-500">
-                  No Restaurants found.
+                  No users found.
                 </td>
               </tr>
             )}
@@ -97,4 +95,4 @@ function RestaurantOverview() {
   );
 }
 
-export default RestaurantOverview;
+export default UserOverview;
