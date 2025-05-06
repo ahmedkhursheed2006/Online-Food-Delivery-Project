@@ -2,10 +2,12 @@ import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 export const useRestaurantStore = create((set) => ({
-  authRestaurant: false,
+  authRestaurant: null,
   isLoggingIn: false,
   isSigningUp: false,
   isCheckingAuth: true,
+  isRestaurantUpdating: false,
+  isProductAdding: false,
   activeTab: "Dashboard",
   activeComponent: "Login",
   products: [],
@@ -61,12 +63,15 @@ export const useRestaurantStore = create((set) => ({
   },
 
   addProduct: async (formData) => {
+    set({ isProductAdding: true });
     try {
       const res = await axiosInstance.post("/product/addProduct", formData);
       toast.success("Product Added");
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
+    } finally {
+      set({ isProductAdding: false });
     }
   },
 
@@ -92,12 +97,25 @@ export const useRestaurantStore = create((set) => ({
 
   getOrder: async () => {
     try {
-      const res = await axiosInstance.get("/order/getOrders")
-      set({orders: res.data})
+      const res = await axiosInstance.get("/order/getOrders");
+      set({ orders: res.data });
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.message)
-      
+      toast.error(error.response.data.message);
     }
-  }
+  },
+
+  updateRestaurant: async (data) => {
+    set({ isRestaurantUpdating: true });
+    try {
+      const res = await axiosInstance.put("/restaurant/updateProfile", data);
+      set({ authRestaurant: res.data });
+      toast.success("Profile Updated Successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    } finally {
+      set({ isRestaurantUpdating: false });
+    }
+  },
 }));

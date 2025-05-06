@@ -29,7 +29,7 @@ export const restaurantValidationSchema = Joi.object({
     .required(),
   cuisineType: Joi.string().required(),
   // kitchenImage: Joi.any(), // can also use Joi.string().uri() if it's a URL
-
+  kichenImage: Joi.string().uri(),
   // 👤 Owner/Manager
   ownerName: Joi.string().min(2).required(),
   ownerContactNumber: Joi.string()
@@ -52,4 +52,5 @@ export const productValidationSchema = Joi.object({
   price: Joi.string().required(),
   ingredients: Joi.string().required(),
   restaurantId: Joi.string().required(),
+  productImg: Joi.string().uri(),
 });

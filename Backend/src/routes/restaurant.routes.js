@@ -5,6 +5,7 @@ import {
   login,
   checkAuth,
   logout,
+  updateProfile,
 } from "../controllers/restaurant.controller.js";
 const router = express.Router();
 
@@ -13,5 +14,6 @@ router.post("/signup", signup);
 router.post("/login", login);
 router.post("/logout", logout);
 router.get("/auth", protectRoute, checkAuth);
+router.put("/updateProfile", protectRoute, updateProfile);
 
 export default router;

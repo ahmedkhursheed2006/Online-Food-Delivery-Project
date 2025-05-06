@@ -2,7 +2,7 @@ import { generateToken } from "../lib/utils.js";
 import Customer from "../models/customer.model.js";
 import Product from "../models/product.model.js";
 import bcrypt from "bcryptjs";
-import cloudinary from "cloudinary";
+import cloudinary from "../lib/cloudinary.js";
 
 export const signup = async (req, res) => {
   const { name, email, password } = req.body;
@@ -143,5 +143,30 @@ export const getProductsByCity = async (req, res) => {
   } catch (error) {
     console.error("Error fetching products:", err);
     res.status(500).json({ message: "Server Error" });
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { profilePic } = req.body;
+
+    if (!profilePic) {
+      return res
+        .status(400)
+        .json({ message: "Please provide a profile picture" });
+    }
+
+    const uploadResponse = await cloudinary.uploader.upload(profilePic);
+    const updatedCustomer = await Customer.findByIdAndUpdate(
+      req.entity._id,
+      { profilePic: uploadResponse.secure_url },
+      { new: true }
+    );
+
+    res.status(200).json(updatedCustomer);
+  } catch (error) {
+    console.log(error);
+    
+    res.status(500).json({ message: "Internal server error" });
   }
 };

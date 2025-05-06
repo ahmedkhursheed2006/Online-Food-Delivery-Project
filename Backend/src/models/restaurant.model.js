@@ -6,7 +6,7 @@ const restaurantSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
- address: {
+  address: {
     type: String,
     required: true,
   },
@@ -30,6 +30,7 @@ const restaurantSchema = new mongoose.Schema({
   },
   kitchenImage: {
     type: String, // File path or URL
+    default: "",
   },
 
   // 👤 Owner / Manager

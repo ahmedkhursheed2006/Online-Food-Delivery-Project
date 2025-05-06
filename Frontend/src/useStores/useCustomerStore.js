@@ -8,6 +8,7 @@ export const useCustomerStore = create((set) => ({
   isCheckingAuth: true,
   scrollSection: "",
   products: [],
+  isUpdatingProfile: false,
   setScrollSection: (tab) => set({ scrollSection: tab }),
 
   checkAuth: async () => {
@@ -82,5 +83,16 @@ export const useCustomerStore = create((set) => ({
     }
   },
 
-  
+  updateProfile: async (data) => {
+    set({ isUpdatingProfile: true });
+    try {
+      const res = await axiosInstance.put("/customer/updateProfile", data);
+      set({ authCustomer: res.data });
+      toast.success("Profile Updated Successfully!");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    } finally {
+      set({ isUpdatingProfile: false });
+    }
+  },
 }));

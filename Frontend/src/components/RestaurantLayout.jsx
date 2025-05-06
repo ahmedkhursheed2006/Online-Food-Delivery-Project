@@ -14,8 +14,8 @@ function RestaurantLayout() {
         <>
           <RestaurantNavbar />
           <div className="flex h-screen">
-            <Sidebar />
-            <main className="flex-1 p-4">
+            <Sidebar className= "h-screen"/>
+            <main className="flex-1 p-4 ">
               <Outlet />
             </main>
           </div>

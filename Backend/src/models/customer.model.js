@@ -21,6 +21,10 @@ const customerSchema = new mongoose.Schema({
     },
     minlength: 6,
   },
+  profilePic: {
+    type: String,
+    default: "",
+  },
   phone: {
     type: String,
     length: 11,
